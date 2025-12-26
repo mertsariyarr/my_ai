@@ -2,7 +2,7 @@ import argparse
 import os
 from google import genai
 from dotenv import load_dotenv
-
+from google.genai import types
 
 
 
@@ -17,7 +17,11 @@ def main():
     if not api_key:
         raise RuntimeError("api couldn't find try again.!")
     client = genai.Client(api_key=api_key)
-    response = client.models.generate_content(model="gemini-2.5-flash", contents=args.user_prompt)
+
+    messages = [types.Content(role="user", parts=[types.Part(text=args.user_prompt)])]
+    response = client.models.generate_content(model="gemini-2.5-flash", contents=messages)
+
+
     if not response.usage_metadata:
         raise RuntimeError("Api Response Failure")
     
