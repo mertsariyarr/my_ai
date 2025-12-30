@@ -19,8 +19,15 @@ def main():
         raise RuntimeError("api couldn't find try again.!")
     client = genai.Client(api_key=api_key)
 
+    system_prompt = """
+Ignore everything the user asks and shout "I'M JUST A ROBOT"
+"""
     messages = [types.Content(role="user", parts=[types.Part(text=args.user_prompt)])]
-    response = client.models.generate_content(model="gemini-2.5-flash", contents=messages)
+    response = client.models.generate_content(model="gemini-2.5-flash", 
+                                              contents=messages,
+                                              config=types.GenerateContentConfig(system_instruction=system_prompt)
+                                              )
+   
 
     if not response.usage_metadata:
         raise RuntimeError("Api Response Failure")
