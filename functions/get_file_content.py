@@ -1,4 +1,6 @@
 import os
+from google.genai import types
+
 
 
 def get_file_content(working_directory, file_path):
@@ -19,7 +21,19 @@ def get_file_content(working_directory, file_path):
 
 
 
-print(get_file_content("calculator", "lorem.txt"))
+schema_get_file_content = types.FunctionDeclaration(
+    name="get_file_content",
+    description="Reads the file content in a specified directory relative to the working directory, with defined maximum characters.",
+    parameters=types.Schema(
+        type=types.Type.OBJECT,
+        properties={
+            "file_path": types.Schema(
+                type=types.Type.STRING,
+                description="File path to list files from, relative to the working directory",
+            )
+        }
+    )
+)
             
         
 
