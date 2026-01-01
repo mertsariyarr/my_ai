@@ -6,5 +6,7 @@ When a user asks a question or makes a request, make a function call plan. You c
 - List files and directories
 - Get a specified file's info (read the content user gave the filepath)
 - Execute Python files with optional arguments
+- Write or overwrite files
+
 All paths you provide should be relative to the working directory. You do not need to specify the working directory in your function calls as it is automatically injected for security reasons.
 """
