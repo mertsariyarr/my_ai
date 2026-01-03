@@ -3,7 +3,7 @@ import os
 from google import genai
 from dotenv import load_dotenv
 from google.genai import types
-from functions.call_function import available_functions
+from functions.call_function import available_functions, call_function
 from prompts import system_prompt
 
 
@@ -29,13 +29,26 @@ def main():
                                               )
    
 
+
+    for function_call in response.function_calls:
+        function_call_result = call_function(function_call, args.verbose)
+
+    if len(function_call_result.parts) == 0:
+        raise Exception("This function call is not avaiable.")
+    
+    if function_call_result.parts[0].function_response is None:
+        raise Exception("This property should't be None!")
+    
+    if function_call_result.parts[0].function_response.response is None:
+        raise Exception("This final area shouldn't be None")
+    
+    my_function_result = function_call_result.parts[0]
+
     if not response.usage_metadata:
         raise RuntimeError("Api Response Failure")
     
     if args.verbose:
-        print(f"User prompt: {args.user_prompt}")
-        print(f"Prompt tokens: {response.usage_metadata.prompt_token_count}")
-        print(f"Response tokens: {response.usage_metadata.candidates_token_count}")
+        print(f"-> {function_call_result.parts[0].function_response.response}")
     else:
         if response.function_calls is None or len(response.function_calls) == 0:
             print(f"{response.text}")
